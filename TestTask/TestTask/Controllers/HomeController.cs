@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using TestTask.Models;
 
 namespace TestTask.Controllers
@@ -17,6 +20,36 @@ namespace TestTask.Controllers
             var employees = await _employeeRepository.GetAllAsync();
 
             return View(employees);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            if (file != null && file.Length > 0)
+            {
+                using (var reader = new StreamReader(file.OpenReadStream()))
+                {
+                    var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+                    {
+                        Delimiter = ";",
+                        HasHeaderRecord = true,
+                        HeaderValidated = null,
+                        MissingFieldFound = null
+                    };
+
+                    using (var csvReader = new CsvReader(reader, csvConfig))
+                    {
+                        var employees = csvReader.GetRecords<Employee>().ToList();
+
+                        foreach (var employee in employees)
+                        {
+                            await _employeeRepository.AddAsync(employee);
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

@@ -2,6 +2,11 @@
 
 <h2>Employees</h2>
 
+<form method="post" asp-controller="Home" asp-action="Upload" enctype="multipart/form-data">
+    <input type="file" name="file" />
+    <button type="submit">Upload</button>
+</form>
+
 <table class="table">
     <thead>
         <tr>
