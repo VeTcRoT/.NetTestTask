@@ -88,5 +88,20 @@ namespace TestTask.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var employee = await _employeeRepository.GetByIdAsync(id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            await _employeeRepository.DeleteAsync(employee);
+
+            return RedirectToAction("Index");
+        }
     }
 }

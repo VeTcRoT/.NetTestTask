@@ -24,4 +24,14 @@
             console.log('Record updated successfully');
         });
     }
+
+    $('a.delete-link').click(function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        if (confirm('Are you sure you want to delete this record?')) {
+            $.post(url, function () {
+                location.reload();
+            });
+        }
+    });
 });

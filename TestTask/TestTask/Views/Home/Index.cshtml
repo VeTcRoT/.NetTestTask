@@ -30,7 +30,7 @@
                 <td><span class="editable" data-field="Phone" data-id="@employee.Id">@employee.Phone</span></td>
                 <td><span class="editable" data-field="Salary" data-id="@employee.Id">@employee.Salary</span></td>
                 <td>
-                    <a href="#">Delete</a>
+                    <a asp-controller="Home" asp-action="Delete" asp-route-id="@employee.Id" class="delete-link">Delete</a>
                 </td>
             </tr>
         }
