@@ -16,3 +16,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.table th:hover {
+    cursor: pointer;
+}
+
+.filter {
+    margin: 15px 0;
+}

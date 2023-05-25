@@ -17,9 +17,6 @@
 
     function updateEmployee(id, field, value) {
         var url = '/Home/Update';
-        console.log(id)
-        console.log(field)
-        console.log(value)
         $.post(url, { Id: id, Field: field, Value: value }, function () {
             console.log('Record updated successfully');
         });
@@ -34,4 +31,52 @@
             });
         }
     });
+
+    $('th').click(function () {
+        var table = $(this).parents('table').eq(0);
+        var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
+        this.asc = !this.asc;
+        if (!this.asc) {
+            rows = rows.reverse();
+        }
+        for (var i = 0; i < rows.length; i++) {
+            table.append(rows[i]);
+        }
+    });
+
+    $('#filter').keyup(function () {
+        var rows = $('.table tbody tr');
+        var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+
+        rows.show().filter(function () {
+            var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+            return !~text.indexOf(val);
+        }).hide();
+    });
+
+    function comparer(index) {
+        if (index === 2) {
+            return function (a, b) {
+                var valA = getCellValue(a, index), valB = getCellValue(b, index);
+
+                valA = new Date(parseDate(valA));
+                valB = new Date(parseDate(valB));
+                return valA - valB;
+            };
+        } else {
+            return function (a, b) {
+                var valA = getCellValue(a, index), valB = getCellValue(b, index);
+                return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+            };
+        }
+    }
+
+    function getCellValue(row, index) {
+        return $(row).children('td').eq(index).text();
+    }
+
+    function parseDate(dateString) {
+        var dateParts = dateString.split('.');
+        return dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
+    }
 });
