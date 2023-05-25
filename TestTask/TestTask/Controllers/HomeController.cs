@@ -1,32 +1,55 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using TestTask.Models;
 
 namespace TestTask.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IEmployeeRepository employeeRepository)
         {
-            _logger = logger;
+            _employeeRepository = employeeRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index() 
         {
-            return View();
+            var employees = await _employeeRepository.GetAllAsync();
+
+            return View(employees);
         }
 
-        public IActionResult Privacy()
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile file)
         {
-            return View();
-        }
+            if (file != null && file.Length > 0)
+            {
+                using (var reader = new StreamReader(file.OpenReadStream()))
+                {
+                    var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+                    {
+                        Delimiter = ";",
+                        HasHeaderRecord = true,
+                        HeaderValidated = null,
+                        MissingFieldFound = null
+                    };
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+                    using (var csvReader = new CsvReader(reader, csvConfig))
+                    {
+                        var employees = csvReader.GetRecords<Employee>().ToList();
+
+                        foreach (var employee in employees)
+                        {
+                            await _employeeRepository.AddAsync(employee);
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

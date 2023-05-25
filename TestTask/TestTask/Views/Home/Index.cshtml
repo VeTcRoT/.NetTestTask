@@ -1,8 +1,39 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model List<Employee>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Employees</h2>
+
+<form method="post" asp-controller="Home" asp-action="Upload" enctype="multipart/form-data">
+    <input type="file" name="file" />
+    <button type="submit">Upload</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Date of Birth</th>
+            <th>Married</th>
+            <th>Phone</th>
+            <th>Salary</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model)
+        {
+            <tr>
+                <td><span>@employee.Id</span></td>
+                <td><span>@employee.Name</span></td>
+                <td><span>@employee.DateOfBirth.ToShortDateString()</span></td>
+                <td><span>@employee.Married</span></td>
+                <td><span>@employee.Phone</span></td>
+                <td><span>@employee.Salary</span></td>
+                <td>
+                    <a href="#">Edit</a> |
+                    <a href="#">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
