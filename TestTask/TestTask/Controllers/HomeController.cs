@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using TestTask.Models;
 
@@ -48,6 +49,57 @@ namespace TestTask.Controllers
                     }
                 }
             }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(int id, string field, string value)
+        {
+            var employee = await _employeeRepository.GetByIdAsync(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            var property = typeof(Employee).GetProperty(field);
+
+            if (property != null)
+            {
+                if (property.PropertyType == typeof(bool))
+                {
+                    property.SetValue(employee, bool.Parse(value));
+                }
+                else if (property.PropertyType == typeof(decimal))
+                {
+                    property.SetValue(employee, decimal.Parse(value));
+                }
+                else if (property.PropertyType == typeof(DateTime))
+                {
+                    property.SetValue(employee, DateTime.Parse(value));
+                }
+                else
+                {
+                    property.SetValue(employee, value);
+                }
+
+                await _employeeRepository.UpdateAsync(employee);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var employee = await _employeeRepository.GetByIdAsync(id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            await _employeeRepository.DeleteAsync(employee);
 
             return RedirectToAction("Index");
         }

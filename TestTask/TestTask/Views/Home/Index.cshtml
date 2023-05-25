@@ -24,14 +24,13 @@
         {
             <tr>
                 <td><span>@employee.Id</span></td>
-                <td><span>@employee.Name</span></td>
-                <td><span>@employee.DateOfBirth.ToShortDateString()</span></td>
-                <td><span>@employee.Married</span></td>
-                <td><span>@employee.Phone</span></td>
-                <td><span>@employee.Salary</span></td>
+                <td><span class="editable" data-field="Name" data-id="@employee.Id">@employee.Name</span></td>
+                <td><span class="editable" data-field="DateOfBirth" data-id="@employee.Id">@employee.DateOfBirth.ToShortDateString()</span></td>
+                <td><span class="editable" data-field="Married" data-id="@employee.Id">@employee.Married</span></td>
+                <td><span class="editable" data-field="Phone" data-id="@employee.Id">@employee.Phone</span></td>
+                <td><span class="editable" data-field="Salary" data-id="@employee.Id">@employee.Salary</span></td>
                 <td>
-                    <a href="#">Edit</a> |
-                    <a href="#">Delete</a>
+                    <a asp-controller="Home" asp-action="Delete" asp-route-id="@employee.Id" class="delete-link">Delete</a>
                 </td>
             </tr>
         }
