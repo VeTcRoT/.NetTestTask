@@ -35,7 +35,8 @@ namespace TestTask.Controllers
                         Delimiter = ";",
                         HasHeaderRecord = true,
                         HeaderValidated = null,
-                        MissingFieldFound = null
+                        MissingFieldFound = null,
+                        TrimOptions = TrimOptions.Trim
                     };
 
                     using (var csvReader = new CsvReader(reader, csvConfig))
