@@ -1,4 +1,6 @@
-﻿namespace TestTask.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TestTask.Models
 {
     public class Employee
     {

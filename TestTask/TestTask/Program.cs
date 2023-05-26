@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using TestTask.Models;
 
@@ -11,6 +12,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<EmployeeValidator>(ServiceLifetime.Transient);
 
 var app = builder.Build();
 

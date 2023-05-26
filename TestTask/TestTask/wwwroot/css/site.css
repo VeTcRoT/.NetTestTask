@@ -24,3 +24,13 @@ body {
 .filter {
     margin: 15px 0;
 }
+
+.file-errors {
+    margin: 10px 0;
+}
+
+.upload-form {
+    display: flex;
+    max-width: 450px;
+    gap: 30px;
+}

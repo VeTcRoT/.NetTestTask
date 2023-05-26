@@ -2,10 +2,12 @@
 
 <h2>Employees</h2>
 
-<form method="post" asp-controller="Home" asp-action="Upload" enctype="multipart/form-data">
-    <input type="file" name="file" />
-    <button type="submit">Upload</button>
+<form method="post" asp-controller="Home" asp-action="Upload" enctype="multipart/form-data" class="upload-form">
+    <input type="file" class="input-file form-control" name="file" />
+    <button type="submit" class="btn btn-success">Upload</button>
 </form>
+
+<div class="file-errors"></div>
 
 <div class="filter">
     <label for="filter">Search:</label>
@@ -29,13 +31,28 @@
         {
             <tr>
                 <td><span>@employee.Id</span></td>
-                <td><span class="editable" data-field="Name" data-id="@employee.Id">@employee.Name</span></td>
-                <td><span class="editable" data-field="DateOfBirth" data-id="@employee.Id">@employee.DateOfBirth.ToShortDateString()</span></td>
-                <td><span class="editable" data-field="Married" data-id="@employee.Id">@employee.Married</span></td>
-                <td><span class="editable" data-field="Phone" data-id="@employee.Id">@employee.Phone</span></td>
-                <td><span class="editable" data-field="Salary" data-id="@employee.Id">@employee.Salary</span></td>
                 <td>
-                    <a asp-controller="Home" asp-action="Delete" asp-route-id="@employee.Id" class="delete-link">Delete</a>
+                    <span class="editable" data-field="Name" data-id="@employee.Id" data-value="@employee.Name">@employee.Name</span>
+                    <div class="field-validation-error"></div>
+                </td>
+                <td>
+                    <span class="editable" data-field="DateOfBirth" data-id="@employee.Id" data-value="@employee.DateOfBirth.ToShortDateString()">@employee.DateOfBirth.ToShortDateString()</span>
+                    <div class="field-validation-error"></div>
+                </td>
+                <td>
+                    <span class="editable" data-field="Married" data-id="@employee.Id" data-value="@employee.Married">@employee.Married</span>
+                    <div class="field-validation-error"></div>
+                </td>
+                <td>
+                    <span class="editable" data-field="Phone" data-id="@employee.Id" data-value="@employee.Phone">@employee.Phone</span>
+                    <div class="field-validation-error"></div>
+                </td>
+                <td>
+                    <span class="editable" data-field="Salary" data-id="@employee.Id" data-value="@employee.Salary">@employee.Salary</span>
+                    <div class="field-validation-error"></div>
+                </td>
+                <td>
+                    <a asp-controller="Home" asp-action="Delete" asp-route-id="@employee.Id" class="delete-link btn btn-danger">Delete</a>
                 </td>
             </tr>
         }
