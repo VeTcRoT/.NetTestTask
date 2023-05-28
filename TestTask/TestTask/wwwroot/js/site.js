@@ -72,8 +72,14 @@
         deleteValidationErrors();
         var url = $(this).attr('href');
         if (confirm('Are you sure you want to delete this record?')) {
-            $.post(url, function () {
-                location.reload();
+            $.post(url, function (data) {
+                if (data.success) {
+                    $(`a[href='${url}']`).parent().parent().remove();
+                }
+                else {
+                    var errorContainer = $('.file-errors')
+                    showValidationErrors(errorContainer, data.errors);
+                }
             });
         }
     });

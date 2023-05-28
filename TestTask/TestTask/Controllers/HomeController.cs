@@ -2,8 +2,6 @@
 using CsvHelper.Configuration;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using TestTask.Models;
 
@@ -20,11 +18,13 @@ namespace TestTask.Controllers
             _validator = validator;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             var employees = await _employeeRepository.GetAllAsync();
 
-            return View(employees);
+            var paginationData = Pagination(employees, page);
+
+            return View(paginationData);
         }
 
         [HttpPost]
@@ -153,12 +153,34 @@ namespace TestTask.Controllers
 
             if (employee == null)
             {
-                return NotFound();
+                return Json(new { success = false, errors = "Employee with this id doesn't exist." });
             }
 
             await _employeeRepository.DeleteAsync(employee);
 
-            return RedirectToAction("Index");
+            return Json(new { success = true });
+        }
+
+        private IEnumerable<Employee> Pagination(IEnumerable<Employee> data, int page)
+        {
+            const int pageSize = 10;
+
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            int recsCount = data.Count();
+
+            var pager = new Pager(recsCount, page, pageSize);
+
+            int recSkip = (page - 1) * pageSize;
+
+            data = data.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            ViewBag.Pager = pager;
+
+            return data;
         }
     }
 }
